@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
-import { StudentsService } from "./students.service";
-import { Student } from "./student.entity";
+import { StudentsService } from './students.service';
+import { Student } from './student.entity';
 
 @Controller('students')
 export class StudentsController {
@@ -8,6 +8,6 @@ export class StudentsController {
 
   @Get()
   async findAll(): Promise<Student[]> {
-    return this.studentsService.findAll()
+    return this.studentsService.findAll();
   }
 }

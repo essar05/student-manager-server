@@ -1,5 +1,17 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Class } from "../classes/class.entity";
+import {
+  AfterLoad,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Class } from '../classes/class.entity';
+import { StudentToClass } from '../student-to-class/student-to-class.entity';
+import { ActivityScore } from '../activity-scores/activity-score.entity';
+import { ActivityPoint } from '../activity-points/activity-point.entity';
+import { LoudnessWarning } from '../loudness-warnings/loudness-warning.entity';
+import { MissingHomework } from '../missing-homeworks/missing-homework.entity';
+import { VirtualColumn } from '../decorators';
 
 @Entity()
 export class Student {
@@ -12,9 +24,9 @@ export class Student {
   @Column()
   lastName: string;
 
-  @Column({ default: null })
-  classId: number;
+  @OneToMany(() => StudentToClass, (stc) => stc.student)
+  classes: Class[];
 
-  @ManyToOne(type => Class, c => c.students)
-  class: Class;
+  @OneToMany(() => StudentToClass, (stc) => stc.student)
+  studentsInClass: StudentToClass[];
 }
