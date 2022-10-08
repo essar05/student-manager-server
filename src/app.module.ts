@@ -10,6 +10,8 @@ import { StudentToClassModule } from './student-to-class/student-to-class.module
 import { ActivityPointsModule } from './activity-points/activity-points.module';
 import { LoudnessWarningsModule } from './loudness-warnings/loudness-warnings.module';
 import { MissingHomeworksModule } from './missing-homeworks/missing-homeworks.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -33,6 +35,8 @@ import { MissingHomeworksModule } from './missing-homeworks/missing-homeworks.mo
     ActivityPointsModule,
     LoudnessWarningsModule,
     MissingHomeworksModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

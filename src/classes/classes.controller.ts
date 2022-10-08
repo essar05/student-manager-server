@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ClassesService } from './classes.service';
 import { Class } from './class.entity';
 import { ActivityScoresService } from '../activity-scores/activity-scores.service';
 import { ActivityPointsService } from '../activity-points/activity-points.service';
 import { MissingHomeworksService } from '../missing-homeworks/missing-homeworks.service';
 import { LoudnessWarningsService } from '../loudness-warnings/loudness-warnings.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('classes')
 export class ClassesController {
@@ -16,16 +17,19 @@ export class ClassesController {
     private loudnessWarningsService: LoudnessWarningsService,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getAll(): Promise<Class[]> {
     return this.classesService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async getById(@Param() params): Promise<Class> {
     return this.classesService.findOne(params.id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post(':classId/studentsPerformance/:studentToClassId/activityScores')
   async addActivityScore(
     @Param() params,
@@ -39,6 +43,7 @@ export class ClassesController {
     return this.classesService.findOne(params.classId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post(':classId/studentsPerformance/:studentToClassId/activityPoints')
   async addActivityPoint(
     @Param() params,
@@ -52,6 +57,7 @@ export class ClassesController {
     return this.classesService.findOne(params.classId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post(':classId/studentsPerformance/:studentToClassId/missingHomeworks')
   async addMissingHomework(@Param() params): Promise<Class> {
     await this.missingHomeworksService.add(params.studentToClassId);
@@ -59,6 +65,7 @@ export class ClassesController {
     return this.classesService.findOne(params.classId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post(':classId/studentsPerformance/:studentToClassId/loudnessWarnings')
   async addLoudnessWarning(@Param() params): Promise<Class> {
     await this.loudnessWarningsService.add(params.studentToClassId);

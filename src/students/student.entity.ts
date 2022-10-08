@@ -1,5 +1,4 @@
 import {
-  AfterLoad,
   Column,
   Entity,
   OneToMany,
@@ -7,11 +6,6 @@ import {
 } from 'typeorm';
 import { Class } from '../classes/class.entity';
 import { StudentToClass } from '../student-to-class/student-to-class.entity';
-import { ActivityScore } from '../activity-scores/activity-score.entity';
-import { ActivityPoint } from '../activity-points/activity-point.entity';
-import { LoudnessWarning } from '../loudness-warnings/loudness-warning.entity';
-import { MissingHomework } from '../missing-homeworks/missing-homework.entity';
-import { VirtualColumn } from '../decorators';
 
 @Entity()
 export class Student {

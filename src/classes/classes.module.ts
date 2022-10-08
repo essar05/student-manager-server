@@ -7,6 +7,7 @@ import { ActivityPointsModule } from '../activity-points/activity-points.module'
 import { LoudnessWarningsModule } from '../loudness-warnings/loudness-warnings.module';
 import { MissingHomeworksModule } from '../missing-homeworks/missing-homeworks.module';
 import { ActivityScoresModule } from '../activity-scores/activity-scores.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ActivityScoresModule } from '../activity-scores/activity-scores.module'
     ActivityPointsModule,
     LoudnessWarningsModule,
     MissingHomeworksModule,
+    AuthModule,
   ],
   controllers: [ClassesController],
   providers: [ClassesService],

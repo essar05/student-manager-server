@@ -75,8 +75,6 @@ export class ClassesService {
         studentToClassId: number;
       }>();
 
-    console.log(pointsToStudent);
-
     class_.studentsPerformance.forEach((studentInClass) => {
       studentInClass.activityPoints =
         pointsToStudent.find(
