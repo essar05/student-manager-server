@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ClassesService } from './classes.service';
 import { Class } from './class.entity';
 import { ActivityScoresService } from '../activity-scores/activity-scores.service';
@@ -44,6 +52,14 @@ export class ClassesController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Delete(':classId/studentsPerformance/:studentToClassId/activityScores/:id')
+  async deleteActivityScore(@Param() params): Promise<Class> {
+    await this.activityScoresService.delete(params.studentToClassId, params.id);
+
+    return this.classesService.findOne(params.classId);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post(':classId/studentsPerformance/:studentToClassId/activityPoints')
   async addActivityPoint(
     @Param() params,
@@ -66,9 +82,25 @@ export class ClassesController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Delete(':classId/studentsPerformance/:studentToClassId/missingHomeworks')
+  async deleteMissingHomework(@Param() params): Promise<Class> {
+    await this.missingHomeworksService.deleteLast(params.studentToClassId);
+
+    return this.classesService.findOne(params.classId);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post(':classId/studentsPerformance/:studentToClassId/loudnessWarnings')
   async addLoudnessWarning(@Param() params): Promise<Class> {
     await this.loudnessWarningsService.add(params.studentToClassId);
+
+    return this.classesService.findOne(params.classId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':classId/studentsPerformance/:studentToClassId/loudnessWarnings')
+  async deleteLoudnessWarning(@Param() params): Promise<Class> {
+    await this.loudnessWarningsService.deleteLast(params.studentToClassId);
 
     return this.classesService.findOne(params.classId);
   }

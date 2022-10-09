@@ -15,4 +15,15 @@ export class MissingHomeworksService {
       studentToClassId,
     });
   }
+
+  async deleteLast(studentToClassId: number): Promise<void> {
+    const lastEntry = await this.missingHomeworkRepository.findOne({
+      where: { studentToClassId },
+      order: { id: 'DESC' },
+    });
+
+    if (lastEntry?.id) {
+      await this.missingHomeworkRepository.delete({ id: lastEntry.id });
+    }
+  }
 }

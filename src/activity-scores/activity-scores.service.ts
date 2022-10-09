@@ -16,4 +16,10 @@ export class ActivityScoresService {
       studentToClassId,
     });
   }
+
+  async delete(studentToClassId: number, id: number): Promise<void> {
+    await this.activityScoreRepository.delete({
+      id,
+    });
+  }
 }

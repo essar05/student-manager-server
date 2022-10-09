@@ -15,4 +15,15 @@ export class LoudnessWarningsService {
       studentToClassId,
     });
   }
+
+  async deleteLast(studentToClassId: number): Promise<void> {
+    const lastEntry = await this.loudnessWarningRepository.findOne({
+      where: { studentToClassId },
+      order: { id: 'DESC' },
+    });
+
+    if (lastEntry?.id) {
+      await this.loudnessWarningRepository.delete({ id: lastEntry.id });
+    }
+  }
 }
