@@ -12,6 +12,8 @@ export class MissingHomework {
   @Column()
   public studentToClassId!: number;
 
-  @ManyToOne(() => StudentToClass, (stc) => stc.missingHomeworkList)
+  @ManyToOne(() => StudentToClass, (stc) => stc.missingHomeworkList, {
+    onDelete: 'CASCADE',
+  })
   public studentToClass!: StudentToClass[];
 }

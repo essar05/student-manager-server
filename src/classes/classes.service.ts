@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Class } from './class.entity';
@@ -6,6 +6,7 @@ import { StudentToClass } from '../student-to-class/student-to-class.entity';
 import { ActivityPoint } from '../activity-points/activity-point.entity';
 import { MissingHomework } from '../missing-homeworks/missing-homework.entity';
 import { LoudnessWarning } from '../loudness-warnings/loudness-warning.entity';
+import { PostClassDto } from './classes.dto';
 
 @Injectable()
 export class ClassesService {
@@ -93,6 +94,28 @@ export class ClassesService {
     });
 
     return class_;
+  }
+
+  async insert(dto: PostClassDto): Promise<Class> | null {
+    const existingClass = await this.classRepository.findOne({
+      where: dto,
+    });
+
+    if (existingClass) {
+      throw new BadRequestException(
+        'O clasa cu aceste date exista deja',
+      );
+    }
+
+    const result = await this.classRepository.insert(dto);
+
+    const insertedId = result.identifiers[0].id;
+
+    if (insertedId) {
+      return this.findOne(insertedId);
+    }
+
+    return null;
   }
 
   async remove(id: number): Promise<void> {

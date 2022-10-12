@@ -23,10 +23,14 @@ export class StudentToClass {
   @Column()
   public classId!: number;
 
-  @ManyToOne(() => Student, (s) => s.classes)
+  @ManyToOne(() => Student, (s) => s.classes, {
+    onDelete: 'CASCADE',
+  })
   public student!: Student;
 
-  @ManyToOne(() => Class, (c) => c.students)
+  @ManyToOne(() => Class, (c) => c.students, {
+    onDelete: 'CASCADE',
+  })
   public class!: Class;
 
   @OneToMany(() => ActivityScore, (aS) => aS.studentToClass)

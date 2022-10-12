@@ -9,4 +9,8 @@ export class SchoolsService {
     @InjectRepository(School)
     private schoolRepository: Repository<School>,
   ) {}
+
+  public findAll(): Promise<School[]> {
+    return this.schoolRepository.find({});
+  }
 }

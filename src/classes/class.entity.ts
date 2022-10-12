@@ -21,6 +21,9 @@ export class Class {
   @Column()
   label: string;
 
+  @Column()
+  schoolId: number;
+
   @ManyToOne((type) => School, (s) => s.classes)
   school: School;
 

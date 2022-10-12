@@ -12,6 +12,8 @@ export class LoudnessWarning {
   @Column()
   public studentToClassId!: number;
 
-  @ManyToOne(() => StudentToClass, (stc) => stc.loudnessWarningList)
+  @ManyToOne(() => StudentToClass, (stc) => stc.loudnessWarningList, {
+    onDelete: 'CASCADE',
+  })
   public studentToClass!: StudentToClass[];
 }

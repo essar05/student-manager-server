@@ -15,6 +15,8 @@ export class ActivityScore {
   @Column()
   public studentToClassId!: number;
 
-  @ManyToOne(() => StudentToClass, (stc) => stc.activityScores)
+  @ManyToOne(() => StudentToClass, (stc) => stc.activityScores, {
+    onDelete: 'CASCADE',
+  })
   public studentToClass!: StudentToClass;
 }

@@ -15,6 +15,8 @@ export class ActivityPoint {
   @Column()
   public studentToClassId!: number;
 
-  @ManyToOne(() => StudentToClass, (stc) => stc.activityPointList)
+  @ManyToOne(() => StudentToClass, (stc) => stc.activityPointList, {
+    onDelete: 'CASCADE',
+  })
   public studentToClass!: StudentToClass[];
 }

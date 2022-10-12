@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Student } from './student.entity';
 import { Repository } from 'typeorm';
+import { InsertStudentDto } from './student.dto';
 
 @Injectable()
 export class StudentsService {
@@ -16,6 +17,21 @@ export class StudentsService {
 
   findOne(id: number): Promise<Student> {
     return this.studentRepository.findOneBy({ id });
+  }
+
+  async insert(dto: InsertStudentDto): Promise<Student> {
+    const existingStudent = await this.studentRepository.findOne({ where: dto });
+
+    if (existingStudent) {
+      throw new BadRequestException('Un elev cu acest nume exista deja');
+    }
+
+    const result = await this.studentRepository.insert(dto);
+    const insertedId = result.identifiers[0].id;
+
+    if (insertedId) {
+      return this.findOne(insertedId);
+    }
   }
 
   async remove(id: number): Promise<void> {

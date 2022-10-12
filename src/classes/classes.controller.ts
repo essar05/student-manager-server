@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  InternalServerErrorException,
   Param,
   Post,
   UseGuards,
@@ -14,11 +15,21 @@ import { ActivityPointsService } from '../activity-points/activity-points.servic
 import { MissingHomeworksService } from '../missing-homeworks/missing-homeworks.service';
 import { LoudnessWarningsService } from '../loudness-warnings/loudness-warnings.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import {
+  PostActivityPointDto,
+  PostActivityScoreDto,
+  PostClassDto,
+} from './classes.dto';
+import { InsertStudentDto } from '../students/student.dto';
+import { StudentsService } from '../students/students.service';
+import { StudentToClassService } from '../student-to-class/student-to-class.service';
 
 @Controller('classes')
 export class ClassesController {
   constructor(
     private classesService: ClassesService,
+    private studentsService: StudentsService,
+    private studentToClassService: StudentToClassService,
     private activityScoresService: ActivityScoresService,
     private activityPointsService: ActivityPointsService,
     private missingHomeworksService: MissingHomeworksService,
@@ -35,6 +46,43 @@ export class ClassesController {
   @Get(':id')
   async getById(@Param() params): Promise<Class> {
     return this.classesService.findOne(params.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post()
+  async insert(@Body() postClassDto: PostClassDto): Promise<Class> | null {
+    return await this.classesService.insert(postClassDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  async delete(@Param() params): Promise<void> {
+    return await this.classesService.remove(params.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post(':classId/students')
+  async insertStudentIntoClass(
+    @Param() params,
+    @Body() insertStudentDto: InsertStudentDto,
+  ): Promise<Class> {
+    const student = await this.studentsService.insert(insertStudentDto);
+
+    if (!student) {
+      throw new InternalServerErrorException();
+    }
+
+    await this.studentToClassService.insert(params.classId, student.id);
+
+    return await this.classesService.findOne(params.classId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':classId/studentsPerformance/:studentToClassId')
+  async removeStudentFromClass(@Param() params): Promise<Class> {
+    await this.studentToClassService.remove(params.studentToClassId);
+
+    return await this.classesService.findOne(params.classId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -104,12 +152,4 @@ export class ClassesController {
 
     return this.classesService.findOne(params.classId);
   }
-}
-
-export interface PostActivityScoreDto {
-  score: number;
-}
-
-export interface PostActivityPointDto {
-  points: number;
 }
