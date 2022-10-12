@@ -12,16 +12,18 @@ import { LoudnessWarningsModule } from './loudness-warnings/loudness-warnings.mo
 import { MissingHomeworksModule } from './missing-homeworks/missing-homeworks.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'user1',
-      password: 'password1',
-      database: 'points_maria',
+      host: process.env.DATABASE_HOST,
+      port: parseInt(process.env.DATABASE_PORT),
+      username: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
       entities: [],
       synchronize: true,
       autoLoadEntities: true,
