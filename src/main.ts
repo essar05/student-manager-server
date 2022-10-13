@@ -8,6 +8,7 @@ async function bootstrap() {
     key: fs.readFileSync(process.env.CERT_KEY_FILE),
     cert: fs.readFileSync(process.env.CERT_FILE),
   };
+  console.log("JWT", process.env.JWT_KEY)
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     httpsOptions,
   });
