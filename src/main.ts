@@ -12,7 +12,7 @@ async function bootstrap() {
     httpsOptions,
   });
   app.enableCors({
-    origin: ['*'],
+    origin: '*',
   });
   await app.listen(process.env.PORT || 3000);
 }
