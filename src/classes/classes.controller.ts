@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -23,6 +24,7 @@ import {
 import { InsertStudentDto } from '../students/student.dto';
 import { StudentsService } from '../students/students.service';
 import { StudentToClassService } from '../student-to-class/student-to-class.service';
+import { PlainBody } from '../shared/plainBody';
 
 @Controller('classes')
 export class ClassesController {
@@ -66,6 +68,12 @@ export class ClassesController {
     @Param() params,
     @Body() insertStudentDto: InsertStudentDto,
   ): Promise<Class> {
+    const class_ = await this.classesService.findOne(params.classId)
+
+    if (!class_) {
+      throw new BadRequestException();
+    }
+
     const student = await this.studentsService.insert(insertStudentDto);
 
     if (!student) {
@@ -83,6 +91,52 @@ export class ClassesController {
     await this.studentToClassService.remove(params.studentToClassId);
 
     return await this.classesService.findOne(params.classId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post(':classId/students/import/:dry?')
+  async importStudentsIntoClass(
+    @Param() params,
+    @PlainBody() body: string,
+  ): Promise<InsertStudentDto[]> {
+    const class_ = await this.classesService.findOne(params.classId)
+
+    if (!class_) {
+      throw new BadRequestException();
+    }
+
+    const bodyLines = body.split('\n');
+
+    const studentsImported: InsertStudentDto[] = [];
+
+    for (const line of bodyLines) {
+      const matches = line.match(/([^\s]+)\s(.+)/);
+
+      if (!matches) {
+        continue;
+      }
+
+      const studentToImport: InsertStudentDto = {
+        firstName: matches[2],
+        lastName: matches[1],
+      };
+
+      studentsImported.push(studentToImport);
+
+      if (params.dry) {
+        continue;
+      }
+
+      const student = await this.studentsService.insert(studentToImport);
+
+      if (!student) {
+        throw new InternalServerErrorException();
+      }
+
+      await this.studentToClassService.insert(params.classId, student.id);
+    }
+
+    return studentsImported;
   }
 
   @UseGuards(JwtAuthGuard)

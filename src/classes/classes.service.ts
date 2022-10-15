@@ -39,6 +39,10 @@ export class ClassesService {
       where: { id: id },
     });
 
+    if (!class_) {
+      return null;
+    }
+
     const pointsToStudentQuery = await this.activityPointRepository
       .createQueryBuilder('ap')
       .select('SUM(ap.points)', 'activityPoints')
@@ -102,9 +106,7 @@ export class ClassesService {
     });
 
     if (existingClass) {
-      throw new BadRequestException(
-        'O clasa cu aceste date exista deja',
-      );
+      throw new BadRequestException('O clasa cu aceste date exista deja');
     }
 
     const result = await this.classRepository.insert(dto);
