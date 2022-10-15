@@ -12,9 +12,11 @@ import { LoudnessWarningsModule } from './loudness-warnings/loudness-warnings.mo
 import { MissingHomeworksModule } from './missing-homeworks/missing-homeworks.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DATABASE_HOST,
