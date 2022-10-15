@@ -12,11 +12,9 @@ import { LoudnessWarningsModule } from './loudness-warnings/loudness-warnings.mo
 import { MissingHomeworksModule } from './missing-homeworks/missing-homeworks.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DATABASE_HOST,
@@ -28,6 +26,7 @@ import { ConfigModule } from '@nestjs/config';
       synchronize: true,
       autoLoadEntities: true,
       timezone: 'Z',
+      charset: "utf8mb4_unicode_ci"
     }),
     StudentsModule,
     ClassesModule,
@@ -38,9 +37,10 @@ import { ConfigModule } from '@nestjs/config';
     LoudnessWarningsModule,
     MissingHomeworksModule,
     UsersModule,
-    AuthModule,
+    AuthModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [ AppController ],
+  providers: [ AppService ]
 })
-export class AppModule {}
+export class AppModule {
+}
