@@ -52,7 +52,7 @@ export class ClassesService {
       .where('stc.classId = :id', { id });
 
     const pointsToStudent = await pointsToStudentQuery.getRawMany<{
-      activityPoints: number;
+      activityPoints: string;
       studentToClassId: number;
     }>();
 
@@ -64,7 +64,7 @@ export class ClassesService {
       .groupBy('mh.studentToClassId')
       .where('stc.classId = :id', { id })
       .getRawMany<{
-        missingHomeworks: number;
+        missingHomeworks: string;
         studentToClassId: number;
       }>();
 
@@ -76,25 +76,31 @@ export class ClassesService {
       .groupBy('lw.studentToClassId')
       .where('stc.classId = :id', { id })
       .getRawMany<{
-        loudnessWarnings: number;
+        loudnessWarnings: string;
         studentToClassId: number;
       }>();
 
     class_.studentsPerformance.forEach((studentInClass) => {
       studentInClass.activityPoints =
-        pointsToStudent.find(
-          (pts) => pts.studentToClassId === studentInClass.id,
-        )?.activityPoints || 0;
+        parseInt(
+          pointsToStudent.find(
+            (pts) => pts.studentToClassId === studentInClass.id,
+          )?.activityPoints,
+        ) || 0;
 
       studentInClass.missingHomeworks =
-        missingHomeworksToStudent.find(
-          (pts) => pts.studentToClassId === studentInClass.id,
-        )?.missingHomeworks || 0;
+        parseInt(
+          missingHomeworksToStudent.find(
+            (pts) => pts.studentToClassId === studentInClass.id,
+          )?.missingHomeworks,
+        ) || 0;
 
       studentInClass.loudnessWarnings =
-        loudnessWarningsToStudent.find(
-          (pts) => pts.studentToClassId === studentInClass.id,
-        )?.loudnessWarnings || 0;
+        parseInt(
+          loudnessWarningsToStudent.find(
+            (pts) => pts.studentToClassId === studentInClass.id,
+          )?.loudnessWarnings,
+        ) || 0;
     });
 
     return class_;

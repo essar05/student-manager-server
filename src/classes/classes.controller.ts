@@ -68,7 +68,7 @@ export class ClassesController {
     @Param() params,
     @Body() insertStudentDto: InsertStudentDto,
   ): Promise<Class> {
-    const class_ = await this.classesService.findOne(params.classId)
+    const class_ = await this.classesService.findOne(params.classId);
 
     if (!class_) {
       throw new BadRequestException();
@@ -98,8 +98,8 @@ export class ClassesController {
   async importStudentsIntoClass(
     @Param() params,
     @PlainBody() body: string,
-  ): Promise<InsertStudentDto[]> {
-    const class_ = await this.classesService.findOne(params.classId)
+  ): Promise<Class | InsertStudentDto[]> {
+    const class_ = await this.classesService.findOne(params.classId);
 
     if (!class_) {
       throw new BadRequestException();
