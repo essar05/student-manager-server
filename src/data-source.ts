@@ -8,8 +8,9 @@ import { Student } from './students/student.entity';
 import { User } from './users/user.entity';
 import { LoudnessWarning } from './loudness-warnings/loudness-warning.entity';
 import { School } from './schools/school.entity';
-import { migrations1667219000298 } from '../migrations/1667219000298-migrations';
 import { config } from 'dotenv';
+import { migrations1667219000298 } from '../migrations/1667219000298-migrations';
+import { migrations1667249605020 } from '../migrations/1667249605020-migrations';
 
 config();
 
@@ -33,5 +34,5 @@ export default new DataSource({
   ],
   timezone: 'Z',
   charset: 'utf8mb4_unicode_ci',
-  migrations: [migrations1667219000298],
+  migrations: [migrations1667219000298, migrations1667249605020],
 });

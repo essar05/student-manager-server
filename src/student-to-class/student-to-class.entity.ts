@@ -23,6 +23,9 @@ export class StudentToClass {
   @Column()
   public classId!: number;
 
+  @Column({ nullable: true })
+  public initialTestScore: number;
+
   @ManyToOne(() => Student, (s) => s.classes, {
     onDelete: 'CASCADE',
   })

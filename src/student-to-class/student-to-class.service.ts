@@ -25,4 +25,8 @@ export class StudentToClassService {
   async remove(id: number): Promise<void> {
     await this.repository.delete(id);
   }
+
+  async updateInitialTestScore(id: number, score: number): Promise<void> {
+    await this.repository.update({ id }, { initialTestScore: score });
+  }
 }

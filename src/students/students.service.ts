@@ -20,7 +20,9 @@ export class StudentsService {
   }
 
   async insert(dto: InsertStudentDto): Promise<Student> {
-    const existingStudent = await this.studentRepository.findOne({ where: dto });
+    const existingStudent = await this.studentRepository.findOne({
+      where: dto,
+    });
 
     if (existingStudent) {
       throw new BadRequestException('Un elev cu acest nume exista deja');
@@ -32,6 +34,18 @@ export class StudentsService {
     if (insertedId) {
       return this.findOne(insertedId);
     }
+  }
+
+  async update(id: number, dto: InsertStudentDto): Promise<Student> {
+    const existingStudent = await this.studentRepository.findOneBy({ id });
+
+    if (!existingStudent) {
+      throw new BadRequestException('Elevul nu exista');
+    }
+
+    await this.studentRepository.update({ id }, dto);
+
+    return this.findOne(id);
   }
 
   async remove(id: number): Promise<void> {

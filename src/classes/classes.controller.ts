@@ -6,6 +6,7 @@ import {
   Get,
   InternalServerErrorException,
   Param,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -17,6 +18,7 @@ import { MissingHomeworksService } from '../missing-homeworks/missing-homeworks.
 import { LoudnessWarningsService } from '../loudness-warnings/loudness-warnings.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import {
+  PatchInitialTestScoreDto,
   PostActivityPointDto,
   PostActivityScoreDto,
   PostClassDto,
@@ -214,5 +216,19 @@ export class ClassesController {
     await this.loudnessWarningsService.deleteLast(params.studentToClassId);
 
     return this.classesService.findOne(params.classId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':classId/studentsPerformance/:studentToClassId/initialTestScore')
+  async updateInitialTestScore(
+    @Param() params,
+    @Body() patchInitialTestScoreDto: PatchInitialTestScoreDto,
+  ): Promise<number> {
+    await this.studentToClassService.updateInitialTestScore(
+      params.studentToClassId,
+      patchInitialTestScoreDto.score,
+    );
+
+    return patchInitialTestScoreDto.score;
   }
 }

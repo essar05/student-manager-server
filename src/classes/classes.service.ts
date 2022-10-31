@@ -118,14 +118,20 @@ export class ClassesService {
 
   async insert(dto: PostClassDto): Promise<Class> | null {
     const existingClass = await this.classRepository.findOne({
-      where: dto,
+      where: {
+        ...dto,
+        label: dto.label.toUpperCase().slice(0, 1),
+      },
     });
 
     if (existingClass) {
       throw new BadRequestException('O clasa cu aceste date exista deja');
     }
 
-    const result = await this.classRepository.insert(dto);
+    const result = await this.classRepository.insert({
+      ...dto,
+      label: dto.label.toUpperCase().slice(0, 1),
+    });
 
     const insertedId = result.identifiers[0].id;
 
