@@ -24,6 +24,10 @@ export class ClassesService {
   findAll(): Promise<Class[]> {
     return this.classRepository.find({
       relations: ['school'],
+      order: {
+        schoolYear: 'ASC',
+        label: 'ASC',
+      },
     });
   }
 
