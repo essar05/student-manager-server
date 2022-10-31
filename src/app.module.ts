@@ -18,17 +18,17 @@ import { ConfigModule } from '@nestjs/config';
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
-      type: 'mysql',
+      type: 'mariadb',
       host: process.env.DATABASE_HOST,
       port: parseInt(process.env.DATABASE_PORT),
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       entities: [],
-      synchronize: true,
+      synchronize: false,
       autoLoadEntities: true,
       timezone: 'Z',
-      charset: "utf8mb4_unicode_ci"
+      charset: 'utf8mb4_unicode_ci',
     }),
     StudentsModule,
     ClassesModule,
@@ -39,10 +39,9 @@ import { ConfigModule } from '@nestjs/config';
     LoudnessWarningsModule,
     MissingHomeworksModule,
     UsersModule,
-    AuthModule
+    AuthModule,
   ],
-  controllers: [ AppController ],
-  providers: [ AppService ]
+  controllers: [AppController],
+  providers: [AppService],
 })
-export class AppModule {
-}
+export class AppModule {}

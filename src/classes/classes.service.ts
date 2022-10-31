@@ -37,6 +37,12 @@ export class ClassesService {
         school: true,
       },
       where: { id: id },
+      order: {
+        studentsPerformance: {
+          student: { lastName: 'ASC' },
+          activityScores: { createdAt: 'ASC' },
+        },
+      },
     });
 
     if (!class_) {
@@ -58,7 +64,7 @@ export class ClassesService {
 
     const missingHomeworksToStudent = await this.missingHomeworkRepository
       .createQueryBuilder('mh')
-      .select('COUNT(mh.id)', 'missingHomeworks')
+      .select('SUM(mh.amount)', 'missingHomeworks')
       .addSelect('mh.studentToClassId', 'studentToClassId')
       .innerJoin(StudentToClass, 'stc', 'stc.id = mh.studentToClassId')
       .groupBy('mh.studentToClassId')
@@ -89,7 +95,7 @@ export class ClassesService {
         ) || 0;
 
       studentInClass.missingHomeworks =
-        parseInt(
+        parseFloat(
           missingHomeworksToStudent.find(
             (pts) => pts.studentToClassId === studentInClass.id,
           )?.missingHomeworks,

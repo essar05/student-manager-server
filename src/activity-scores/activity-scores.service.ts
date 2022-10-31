@@ -10,11 +10,19 @@ export class ActivityScoresService {
     private activityScoreRepository: Repository<ActivityScore>,
   ) {}
 
-  async add(studentToClassId: number, score: number): Promise<void> {
-    await this.activityScoreRepository.insert({
+  async add(studentToClassId: number, score: number): Promise<ActivityScore> {
+    const result = await this.activityScoreRepository.insert({
       score,
       studentToClassId,
     });
+
+    const insertedId = result.identifiers[0].id;
+
+    if (insertedId) {
+      return this.activityScoreRepository.findOne({
+        where: { id: insertedId },
+      });
+    }
   }
 
   async delete(studentToClassId: number, id: number): Promise<void> {

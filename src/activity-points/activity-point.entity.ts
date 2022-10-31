@@ -9,7 +9,11 @@ export class ActivityPoint {
   @Column()
   public points: number;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    precision: 0,
+  })
   public createdAt: Date;
 
   @Column()

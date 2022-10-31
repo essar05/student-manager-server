@@ -6,7 +6,14 @@ export class MissingHomework {
   @PrimaryGeneratedColumn()
   public id!: number;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'float', default: 1 })
+  public amount: number;
+
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    precision: 0,
+  })
   public createdAt: Date;
 
   @Column()

@@ -6,7 +6,11 @@ export class LoudnessWarning {
   @PrimaryGeneratedColumn()
   public id!: number;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    precision: 0,
+  })
   public createdAt: Date;
 
   @Column()

@@ -10,9 +10,10 @@ export class MissingHomeworksService {
     private missingHomeworkRepository: Repository<MissingHomework>,
   ) {}
 
-  async add(studentToClassId: number): Promise<void> {
+  async add(studentToClassId: number, amount: number): Promise<void> {
     await this.missingHomeworkRepository.insert({
       studentToClassId,
+      amount,
     });
   }
 
@@ -25,5 +26,15 @@ export class MissingHomeworksService {
     if (lastEntry?.id) {
       await this.missingHomeworkRepository.delete({ id: lastEntry.id });
     }
+  }
+
+  async getSum(studentToClassId: number): Promise<number> {
+    return parseFloat(
+      await this.missingHomeworkRepository
+        .createQueryBuilder('mh')
+        .select('SUM(mh.amount)', 'missingHomeworks')
+        .where('mh.studentToClassId = :studentToClassId', { studentToClassId })
+        .getRawOne(),
+    );
   }
 }

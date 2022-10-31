@@ -20,11 +20,13 @@ import {
   PostActivityPointDto,
   PostActivityScoreDto,
   PostClassDto,
+  PostMissingHomeworkDto,
 } from './classes.dto';
 import { InsertStudentDto } from '../students/student.dto';
 import { StudentsService } from '../students/students.service';
 import { StudentToClassService } from '../student-to-class/student-to-class.service';
 import { PlainBody } from '../shared/plainBody';
+import { ActivityScore } from '../activity-scores/activity-score.entity';
 
 @Controller('classes')
 export class ClassesController {
@@ -144,13 +146,11 @@ export class ClassesController {
   async addActivityScore(
     @Param() params,
     @Body() postActivityScoreDto: PostActivityScoreDto,
-  ): Promise<Class> {
-    await this.activityScoresService.add(
+  ): Promise<ActivityScore> {
+    return await this.activityScoresService.add(
       params.studentToClassId,
       postActivityScoreDto.score,
     );
-
-    return this.classesService.findOne(params.classId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -177,14 +177,23 @@ export class ClassesController {
 
   @UseGuards(JwtAuthGuard)
   @Post(':classId/studentsPerformance/:studentToClassId/missingHomeworks')
-  async addMissingHomework(@Param() params): Promise<Class> {
-    await this.missingHomeworksService.add(params.studentToClassId);
+  async addMissingHomework(
+    @Param() params,
+    @Body() postMissingHomeworkDto: PostMissingHomeworkDto,
+  ): Promise<number> {
+    await this.missingHomeworksService.add(
+      params.studentToClassId,
+      postMissingHomeworkDto.amount,
+    );
 
-    return this.classesService.findOne(params.classId);
+    return this.missingHomeworksService.getSum(params.studentToClassId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':classId/studentsPerformance/:studentToClassId/missingHomeworks')
+  /**
+   * @deprecated
+   */
   async deleteMissingHomework(@Param() params): Promise<Class> {
     await this.missingHomeworksService.deleteLast(params.studentToClassId);
 
